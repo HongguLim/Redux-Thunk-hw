@@ -1,3 +1,27 @@
+23.01.27 공부
+
+
+1. getTodos 로직
+    1. todoList 컴포넌트에서 dispatch로 getTodos에 action.payload를 보내준다(암것도 없이)
+    2. __getTodos가 실행되는데 todos를 선언하고 여기다 axios.get으로 todos를 전부 가져와서 담아준다
+    3. thunkAPI.fulfillWithValue로 받아온 todos.data를 extraReducers의 __getTodos.fulfilled의 인자로 넘겨준다
+    4. state.todos에 인자로 받아온 payload를 넣어준다
+2. addTodos 로직
+    1. input 컴포넌트에서 dispatch로 newTodo를 넘겨준다
+    2. arg로 넘겨준 payload를 받고 그걸 axios.post로 todos에 넣어준다
+    3. 그리고 arg를 thunkAPI.fulfillWithValue(arg)로 넘겨준다
+3. __addTodoThunk.fulfilled에서 action.payload로 받아서 그걸 push 로 state.todos에 추가해준다(로컬, 서버 따로관리)
+4. deleteTodos 로직
+    1. dispatch로 todo.id를 넘겨준다
+    2. 위랑 과정 똑같음
+    3. __deleteTodoThunk.fulfilled에서 state.todos에서 filter로 하나하나 요소들을 item으로 받아온다음 action.payload로 받아온것과 비교한다. 그중 다른것만 state.todos에 저장 (id가 같은거 하나는 걸러짐)
+5. switchTodos 로직
+    1. dispatch로 {...todo(구조분해할당), isDone: !todo.isDone}가 담긴 객체인 switchTodo를 넘겨준다 
+    2. axios.patch로 해당 id의 객체를 넘겨받은 객체로 바꿔준다
+    3. arg를 extraReducers로 넘겨주고 state.todos를 map을 돌려서 id가 같은 객체의 isDone값을 !item.isDone으로 바꿔준다. 나머지 객체는 그냥 리턴해준다.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
