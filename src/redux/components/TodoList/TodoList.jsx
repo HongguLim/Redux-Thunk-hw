@@ -28,9 +28,6 @@ function TodoList({ isActive }) {
         {todos
           ?.filter((item) => item.isDone === !isActive)
           .map((item) => {
-            {
-              /* console.log("item", item); */
-            }
             return <Todo key={item.id} todo={item} isActive={isActive} />;
           })}
       </StyledTodoListBox>

@@ -35,6 +35,36 @@ export const __addTodoThunk = createAsyncThunk(
   }
 );
 
+// 1. 삭제
+export const __deleteTodoThunk = createAsyncThunk(
+  "DELETE_TODO",
+  async (arg, thunkAPI) => {
+    try {
+      // 시도할 내용
+      await axios.delete(`http://localhost:4000/todos/${arg}`);
+      return thunkAPI.fulfillWithValue(arg);
+    } catch (err) {
+      // 오류가 났을 때의 내용
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+// 2. 스위치
+export const __switchTodoThunk = createAsyncThunk(
+  "SWITCH_TODO",
+  async (arg, thunkAPI) => {
+    try {
+      await axios.patch(`http://localhost:4000/todos/${arg.id}`, arg);
+      return thunkAPI.fulfillWithValue(arg);
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
 // initial states
 const initialState = {
   todos: [],
@@ -51,9 +81,9 @@ const todosSlice = createSlice({
     // addTodo: (state, action) => {
     //   return [...state, action.payload];
     // }, // action creator의 이름
-    removeTodo: (state, action) => {
-      return state.filter((item) => item.id !== action.payload);
-    }, // action creator의 이름
+    // removeTodo: (state, action) => {
+    //   return state.filter((item) => item.id !== action.payload);
+    // }, // action creator의 이름
     switchTodo: (state, action) => {
       return state.map((item) => {
         if (item.id === action.payload) {
@@ -75,6 +105,24 @@ const todosSlice = createSlice({
       state.todos.push(action.payload);
     },
     [__addTodoThunk.rejected]: (state, action) => {
+      //
+    },
+
+    [__deleteTodoThunk.fulfilled]: (state, action) => {
+      state.todos = state.todos.filter((item) => item.id !== action.payload);
+    },
+    [__deleteTodoThunk.rejected]: (state, action) => {
+      //
+    },
+    [__switchTodoThunk.fulfilled]: (state, action) => {
+      state.todos = state.todos.map((item) => {
+        if (item.id === action.payload.id) {
+          return { ...item, isDone: !item.isDone };
+        }
+        return item;
+      });
+    },
+    [__switchTodoThunk.rejected]: (state, action) => {
       //
     },
   },
